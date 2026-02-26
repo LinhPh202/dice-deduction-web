@@ -202,6 +202,8 @@ export default function DiceDeduction() {
   // --- THẢ VÀO BẢNG ---
   const handleDropOnBoard = (e: React.DragEvent<HTMLDivElement>, dropRow: number, dropCol: number) => {
     e.preventDefault();
+    e.stopPropagation(); // <-- DÒNG MỚI THÊM VÀO ĐỂ CHẶN LỖI NỔI BỌT
+    
     if (!draggedPiece) return;
 
     const targetRow = dropRow - dragOffset.current.r;
