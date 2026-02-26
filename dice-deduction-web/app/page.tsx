@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState, useRef, useMemo, useEffect } from 'react';
-
+import { polyfill } from "mobile-drag-drop";
+import { scrollBehaviourDragImageTranslateOverride } from "mobile-drag-drop/scroll-behaviour";
+import "mobile-drag-drop/default.css";
 // --- ĐỊNH NGHĨA KIỂU DỮ LIỆU ---
 interface Piece {
   id: string;
@@ -85,6 +87,15 @@ export default function DiceDeduction() {
   const [draggedPiece, setDraggedPiece] = useState<{ piece: Piece, source: 'tray' | 'board' } | null>(null);
   const dragOffset = useRef({ r: 0, c: 0 }); 
   const [history, setHistory] = useState<{ board: (Cell | null)[][], availablePieces: Piece[] }[]>([]);
+
+  useEffect(() => {
+    // Kích hoạt nhận diện chạm màn hình
+    polyfill({
+      dragImageTranslateOverride: scrollBehaviourDragImageTranslateOverride
+    });
+    // Chặn cuộn trang khi đang kéo thả
+    window.addEventListener('touchmove', () => {}, { passive: false });
+  }, []);
 
   // Tái tạo lại các khối trên bảng để làm Ghost Image
   const piecesOnBoard = useMemo(() => {
@@ -333,7 +344,12 @@ export default function DiceDeduction() {
 
   return (
     <div className="min-h-screen bg-slate-800 p-8 font-sans text-slate-800 flex justify-center relative" onDragOver={e => e.preventDefault()} onDrop={handleDropOnTray}>
-      
+    {/* CẢNH BÁO XOAY NGANG MÀN HÌNH (Chỉ hiện trên điện thoại khi cầm dọc) */}
+      <div className="fixed inset-0 z-[100] bg-slate-900 text-white flex flex-col items-center justify-center md:hidden portrait:flex landscape:hidden">
+        <div className="text-6xl mb-4 animate-spin-slow">🔄</div>
+        <p className="text-xl font-bold">Vui lòng xoay ngang điện thoại</p>
+        <p className="text-slate-400 mt-2 text-center px-6">Giao diện trò chơi cần nhiều không gian ngang để hiển thị khay mảnh ghép.</p>
+      </div>  
       {/* HIỆU ỨNG CHIẾN THẮNG */}
       {isWon && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center backdrop-blur-sm">
@@ -354,7 +370,7 @@ export default function DiceDeduction() {
             {piece.shape.map((row, rIdx) => (
               <div key={rIdx} className="flex gap-1">
                 {row.map((cell, cIdx) => (
-                  <div key={cIdx} className={`w-16 h-16 flex items-center justify-center rounded-md ${cell ? piece.color : 'bg-transparent'}`}>
+                  <div key={cIdx} className={`w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 flex items-center justify-center rounded-md ${cell ? piece.color : 'bg-transparent'}`}>
                     {cell === 1 && piece.dots[rIdx][cIdx] === 1 && <div className="w-5 h-5 bg-slate-900 rounded-full shadow-md"></div>}
                   </div>
                 ))}
@@ -395,7 +411,7 @@ export default function DiceDeduction() {
                       onDragOver={e => e.preventDefault()}
                       draggable={cell !== null && !cell.locked}
                       onDragStart={(e) => cell && handleDragStartFromBoard(e, cell.id, rowIndex, colIndex)}
-                      className={`w-16 h-16 flex items-center justify-center transition-colors
+                      className={`w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 flex items-center justify-center transition-colors
                         ${cell ? (cell.locked ? 'bg-slate-600 cursor-not-allowed border border-white/10 shadow-inner' : cell.color + ' cursor-grab active:cursor-grabbing border border-white/30') : 'bg-slate-100/90 hover:bg-slate-300'}
                       `}
                     >
