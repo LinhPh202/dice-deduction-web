@@ -2,39 +2,51 @@
 
 import React, { useState } from 'react';
 
-// 1. DỮ LIỆU TĨNH: 12 MẢNH GHÉP CHUẨN CỦA DICE DEDUCTION
-// 1 đại diện cho ô có khối nhựa, 0 đại diện cho ô trống (nếu là khối phức tạp)
-// dots: 1 là có chấm đen, 0 là không có
-const INITIAL_PIECES = [
-  { id: 'p1', shape: [[1, 1]], dots: [[0, 0]], color: 'bg-blue-200/60' },          // 1x2 trống
-  { id: 'p2', shape: [[1, 1]], dots: [[0, 0]], color: 'bg-blue-200/60' },          // 1x2 trống
-  { id: 'p3', shape: [[1, 1]], dots: [[0, 0]], color: 'bg-blue-200/60' },          // 1x2 trống
-  { id: 'p4', shape: [[1, 1]], dots: [[0, 0]], color: 'bg-blue-200/60' },          // 1x2 trống
-  { id: 'p5', shape: [[1, 1]], dots: [[1, 1]], color: 'bg-green-200/60' },         // 1x2 có 2 chấm
-  { id: 'p6', shape: [[1, 1, 1]], dots: [[1, 0, 1]], color: 'bg-yellow-200/60' },  // 1x3 có 2 chấm 2 đầu
-  { id: 'p7', shape: [[1, 1, 1]], dots: [[1, 0, 0]], color: 'bg-purple-200/60' },  // 1x3 có 1 chấm
-  { id: 'p8', shape: [[1, 1, 1]], dots: [[1, 0, 0]], color: 'bg-pink-200/60' },    // 1x3 có 1 chấm
-  { id: 'p9', shape: [[1, 1, 1, 1]], dots: [[1, 0, 0, 1]], color: 'bg-teal-200/60' }, // 1x4 có 2 chấm 2 đầu
-  { id: 'p10', shape: [[1, 1], [1, 1]], dots: [[0, 1], [0, 0]], color: 'bg-orange-200/60' }, // 2x2 có 1 chấm góc
-  { id: 'p11', shape: [[1, 1], [1, 1]], dots: [[1, 0], [0, 1]], color: 'bg-red-200/60' },    // 2x2 có 2 chấm chéo
-  { id: 'p12', shape: [[1, 1, 1], [1, 1, 1]], dots: [[0, 1, 0], [0, 0, 0]], color: 'bg-indigo-200/60' }, // 2x3 có 1 chấm cạnh
+// 1. ĐỊNH NGHĨA KIỂU DỮ LIỆU (TYPESCRIPT INTERFACES)
+interface Piece {
+  id: string;
+  shape: number[][];
+  dots: number[][];
+  color: string;
+}
+
+interface Cell {
+  id: string;
+  hasDot: boolean;
+  color: string;
+}
+
+// 2. DỮ LIỆU TĨNH: 12 MẢNH GHÉP CHUẨN CỦA DICE DEDUCTION
+const INITIAL_PIECES: Piece[] = [
+  { id: 'p1', shape: [[1, 1]], dots: [[0, 0]], color: 'bg-blue-200/60' },
+  { id: 'p2', shape: [[1, 1]], dots: [[0, 0]], color: 'bg-blue-200/60' },
+  { id: 'p3', shape: [[1, 1]], dots: [[0, 0]], color: 'bg-blue-200/60' },
+  { id: 'p4', shape: [[1, 1]], dots: [[0, 0]], color: 'bg-blue-200/60' },
+  { id: 'p5', shape: [[1, 1]], dots: [[1, 1]], color: 'bg-green-200/60' },
+  { id: 'p6', shape: [[1, 1, 1]], dots: [[1, 0, 1]], color: 'bg-yellow-200/60' },
+  { id: 'p7', shape: [[1, 1, 1]], dots: [[1, 0, 0]], color: 'bg-purple-200/60' },
+  { id: 'p8', shape: [[1, 1, 1]], dots: [[1, 0, 0]], color: 'bg-pink-200/60' },
+  { id: 'p9', shape: [[1, 1, 1, 1]], dots: [[1, 0, 0, 1]], color: 'bg-teal-200/60' },
+  { id: 'p10', shape: [[1, 1], [1, 1]], dots: [[0, 1], [0, 0]], color: 'bg-orange-200/60' },
+  { id: 'p11', shape: [[1, 1], [1, 1]], dots: [[1, 0], [0, 1]], color: 'bg-red-200/60' },
+  { id: 'p12', shape: [[1, 1, 1], [1, 1, 1]], dots: [[0, 1, 0], [0, 0, 0]], color: 'bg-indigo-200/60' },
 ];
 
 export default function DiceDeduction() {
-  const [board, setBoard] = useState(Array(6).fill(null).map(() => Array(6).fill(null)));
-  const [availablePieces, setAvailablePieces] = useState(INITIAL_PIECES);
-  const [draggedPiece, setDraggedPiece] = useState(null);
+  const [board, setBoard] = useState<(Cell | null)[][]>(
+    Array(6).fill(null).map(() => Array(6).fill(null))
+  );
+  const [availablePieces, setAvailablePieces] = useState<Piece[]>(INITIAL_PIECES);
+  const [draggedPiece, setDraggedPiece] = useState<Piece | null>(null);
 
-  // LOGIC XOAY MA TRẬN 90 ĐỘ (Thuật toán Transpose & Reverse)
-  const rotatePiece = (pieceId) => {
+  // LOGIC XOAY MA TRẬN 90 ĐỘ (Khai báo pieceId là kiểu string)
+  const rotatePiece = (pieceId: string) => {
     setAvailablePieces(prevPieces => 
       prevPieces.map(piece => {
         if (piece.id === pieceId) {
-          // Xoay shape 90 độ theo chiều kim đồng hồ
           const newShape = piece.shape[0].map((_, index) => 
             piece.shape.map(row => row[index]).reverse()
           );
-          // Xoay vị trí chấm đen (dots) tương ứng
           const newDots = piece.dots[0].map((_, index) => 
             piece.dots.map(row => row[index]).reverse()
           );
@@ -45,13 +57,13 @@ export default function DiceDeduction() {
     );
   };
 
-  // LOGIC KÉO THẢ
-  const handleDragStart = (e, piece) => {
+  // LOGIC KÉO THẢ (Khai báo kiểu cho e, piece, row, col)
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, piece: Piece) => {
     setDraggedPiece(piece);
     e.dataTransfer.effectAllowed = "move";
   };
 
-  const handleDrop = (e, row, col) => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, row: number, col: number) => {
     e.preventDefault();
     if (!draggedPiece) return;
 
@@ -59,13 +71,11 @@ export default function DiceDeduction() {
     const pShape = draggedPiece.shape;
     const pDots = draggedPiece.dots;
 
-    // Kiểm tra tràn viền
     if (row + pShape.length > 6 || col + pShape[0].length > 6) {
       alert("Vị trí không hợp lệ: Bị tràn ra ngoài bảng!");
       return;
     }
 
-    // Kiểm tra đè lên mảnh khác
     let isOverlap = false;
     for (let r = 0; r < pShape.length; r++) {
       for (let c = 0; c < pShape[0].length; c++) {
@@ -79,7 +89,6 @@ export default function DiceDeduction() {
       return;
     }
 
-    // Cập nhật bảng
     for (let r = 0; r < pShape.length; r++) {
       for (let c = 0; c < pShape[0].length; c++) {
         if (pShape[r][c] === 1) {
@@ -97,7 +106,7 @@ export default function DiceDeduction() {
     setDraggedPiece(null);
   };
 
-  const handleDragOver = (e) => {
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault(); 
   };
 
@@ -156,7 +165,7 @@ export default function DiceDeduction() {
                 key={piece.id}
                 draggable
                 onDragStart={(e) => handleDragStart(e, piece)}
-                onClick={() => rotatePiece(piece.id)} // Gắn hàm xoay vào sự kiện Click
+                onClick={() => rotatePiece(piece.id)}
                 className="cursor-pointer hover:scale-105 transition-transform origin-center p-2 bg-slate-800 rounded-lg border border-slate-600 shadow-md"
               >
                 <div className="flex flex-col gap-1">
