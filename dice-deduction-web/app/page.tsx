@@ -110,7 +110,7 @@ const CHALLENGES: Challenge[] = [
       { id: 'p4', row: 2, col: 4, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
       { id: 'p5', row: 3, col: 2, rotatedShape: [[1,1]], rotatedDots: [[1,1]] },
       { id: 'p8', row: 4, col: 2, rotatedShape: [[1,1,1]], rotatedDots: [[0,0,1]] },
-      { id: 'p3', row: 5, col: 2, rotatedShape: [[1,1]], rotatedDots: [[0,0]] }
+      { id: 'p3', row: 5, col: 3, rotatedShape: [[1,1]], rotatedDots: [[0,0]] }
     ]
   },
   {
@@ -188,7 +188,7 @@ const CHALLENGES: Challenge[] = [
     ],
     setupPieces: [
       { id: 'p6', row: 0, col: 1, rotatedShape: [[1],[1]], rotatedDots: [[0],[1]] },
-      { id: 'p10', row: 1, col: 3, rotatedShape: [[1,1],[1,1]], rotatedDots: [[0,0],[1,0]] },
+      { id: 'p12', row: 1, col: 3, rotatedShape: [[1,1],[1,1],[1,1]], rotatedDots: [[0,0],[1,0],[0,0]] },
       { id: 'p8', row: 1, col: 5, rotatedShape: [[1],[1],[1]], rotatedDots: [[0],[0],[1]] },
       { id: 'p1', row: 2, col: 1, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] }
     ]
@@ -231,7 +231,7 @@ const CHALLENGES: Challenge[] = [
       { id: 'p1', row: 1, col: 0, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
       { id: 'p9', row: 2, col: 0, rotatedShape: [[1],[1],[1],[1]], rotatedDots: [[1],[0],[0],[1]] },
       { id: 'p2', row: 4, col: 1, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
-      { id: 'p3', row: 4, col: 4, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] }
+      { id: 'p3', row: 4, col: 3, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] }
     ]
   },
   {
@@ -257,7 +257,7 @@ const CHALLENGES: Challenge[] = [
       { id: 'p1', row: 0, col: 3, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
       { id: 'p12', row: 0, col: 4, rotatedShape: [[1,1],[1,1],[1,1]], rotatedDots: [[0,0],[1,0],[0,0]] },
       { id: 'p5', row: 3, col: 0, rotatedShape: [[1],[1]], rotatedDots: [[1],[1]] },
-      { id: 'p8', row: 5, col: 2, rotatedShape: [[1,1,1]], rotatedDots: [[1,0,0]] }
+      { id: 'p8', row: 5, col: 3, rotatedShape: [[1,1,1]], rotatedDots: [[1,0,0]] }
     ]
   },
   {
@@ -297,14 +297,14 @@ const CHALLENGES: Challenge[] = [
     level: 19, difficulty: 'Junior',
     hints: [
       { type: 'row', index: 0, value: 5 }, 
-      { type: 'col', index: 0, value: 6 }
+      { type: 'col', index: 1, value: 6 }
     ],
     setupPieces: [
       { id: 'p1', row: 0, col: 0, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
       { id: 'p5', row: 2, col: 3, rotatedShape: [[1],[1]], rotatedDots: [[1],[1]] },
       { id: 'p12', row: 2, col: 4, rotatedShape: [[1,1],[1,1],[1,1]], rotatedDots: [[0,0],[0,1],[0,0]] },
-      { id: 'p2', row: 3, col: 1, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
-      { id: 'p6', row: 3, col: 2, rotatedShape: [[1],[1]], rotatedDots: [[0],[1]] }
+      { id: 'p2', row: 2, col: 1, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
+      { id: 'p6', row: 2, col: 2, rotatedShape: [[1],[1]], rotatedDots: [[0],[1]] }
     ]
   },
   {
@@ -312,7 +312,7 @@ const CHALLENGES: Challenge[] = [
     hints: [],
     setupPieces: [
       { id: 'p9', row: 0, col: 2, rotatedShape: [[1,1,1,1]], rotatedDots: [[1,0,0,1]] },
-      { id: 'p8', row: 2, col: 1, rotatedShape: [[1],[1],[1]], rotatedDots: [[0],[0],[1]] },
+      { id: 'p8', row: 1, col: 1, rotatedShape: [[1],[1],[1]], rotatedDots: [[0],[0],[1]] },
       { id: 'p1', row: 3, col: 4, rotatedShape: [[1,1]], rotatedDots: [[0,0]] }
     ]
   },
