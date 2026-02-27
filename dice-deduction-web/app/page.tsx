@@ -70,10 +70,9 @@ export default function DiceDeduction() {
   const [isWon, setIsWon] = useState<boolean>(false);
   const [history, setHistory] = useState<{ board: (Cell | null)[][], availablePieces: Piece[] }[]>([]);
 
-  // Tham chiếu để lấy kích thước thật của ô vuông trên bảng (giúp phóng to mảnh ghép chuẩn xác)
   const boardCellRef = useRef<HTMLDivElement>(null);
 
-  // --- ENGINE KÉO THẢ MƯỢT MÀ BẰNG POINTER EVENTS ---
+  // --- THÊM boardRow & boardCol ĐỂ LƯU VỊ TRÍ GỐC TRÊN BẢNG ---
   const [dragState, setDragState] = useState<{
     isDragging: boolean;
     piece: Piece | null;
@@ -82,8 +81,10 @@ export default function DiceDeduction() {
     startY: number;
     currentX: number;
     currentY: number;
-    clickR: number; // Tọa độ hàng của khối bị ngón tay chạm vào
-    clickC: number; // Tọa độ cột của khối bị ngón tay chạm vào
+    clickR: number; 
+    clickC: number; 
+    boardRow?: number;
+    boardCol?: number;
     startTime: number;
     cellWidth: number;
   }>({ isDragging: false, piece: null, source: null, startX: 0, startY: 0, currentX: 0, currentY: 0, clickR: 0, clickC: 0, startTime: 0, cellWidth: 48 });
@@ -179,27 +180,12 @@ export default function DiceDeduction() {
     setHistory(prev => prev.slice(0, -1));
   };
 
-  const rotatePieceInTray = (pieceId: string) => {
-    setAvailablePieces(prevPieces => 
-      prevPieces.map(piece => {
-        if (piece.id === pieceId) {
-          const newShape = piece.shape[0].map((_, index) => piece.shape.map(row => row[index]).reverse());
-          const newDots = piece.dots[0].map((_, index) => piece.dots.map(row => row[index]).reverse());
-          return { ...piece, shape: newShape, dots: newDots };
-        }
-        return piece;
-      })
-    );
-  };
-
-  // --- XỬ LÝ SỰ KIỆN POINTER (CHẠM VÀ KÉO) ---
-  const handlePointerDown = (e: React.PointerEvent, piece: Piece, source: 'tray' | 'board', clickR: number, clickC: number) => {
-    if (e.button !== 0 && e.pointerType === 'mouse') return; // Chỉ nhận click trái hoặc cảm ứng
+  const handlePointerDown = (e: React.PointerEvent, piece: Piece, source: 'tray' | 'board', clickR: number, clickC: number, boardRow?: number, boardCol?: number) => {
+    if (e.button !== 0 && e.pointerType === 'mouse') return; 
     e.preventDefault();
     e.stopPropagation();
 
-    // Đo đạc kích thước thật của ô vuông trên bảng để phóng to mảnh ghép
-    let targetCellWidth = 48; // Mặc định
+    let targetCellWidth = 48; 
     if (boardCellRef.current) {
       targetCellWidth = boardCellRef.current.getBoundingClientRect().width;
     }
@@ -221,13 +207,12 @@ export default function DiceDeduction() {
       isDragging: true, piece, source,
       startX: e.clientX, startY: e.clientY,
       currentX: e.clientX, currentY: e.clientY,
-      clickR, clickC,
+      clickR, clickC, boardRow, boardCol,
       startTime: Date.now(),
       cellWidth: targetCellWidth
     });
   };
 
-  // Các sự kiện di chuyển chuột/ngón tay phải được gắn ở mức toàn màn hình (Window)
   useEffect(() => {
     if (!dragState.isDragging) return;
 
@@ -241,15 +226,32 @@ export default function DiceDeduction() {
       const dx = e.clientX - dragState.startX;
       const dy = e.clientY - dragState.startY;
 
-      // Phân biệt Click để xoay (ở khay) vs Drag
-      if (dt < 250 && Math.abs(dx) < 10 && Math.abs(dy) < 10 && dragState.source === 'tray') {
-        rotatePieceInTray(dragState.piece!.id);
-        setAvailablePieces(prev => [...prev, dragState.piece!]);
+      // Phân biệt Click nhanh (để xoay hoặc trả về chỗ cũ) vs Drag kéo thả (ngưỡng 15px)
+      if (dt < 250 && Math.abs(dx) < 15 && Math.abs(dy) < 15) {
+        if (dragState.source === 'tray') {
+          // Xoay mảnh 90 độ
+          const p = dragState.piece!;
+          const newShape = p.shape[0].map((_, index) => p.shape.map(row => row[index]).reverse());
+          const newDots = p.dots[0].map((_, index) => p.dots.map(row => row[index]).reverse());
+          setAvailablePieces(prev => [...prev, { ...p, shape: newShape, dots: newDots }]);
+        } else if (dragState.source === 'board' && dragState.boardRow !== undefined && dragState.boardCol !== undefined) {
+          // Nhấn nhầm trên bảng -> Trả về đúng vị trí cũ
+          const newBoard = board.map(row => [...row]);
+          const pShape = dragState.piece!.shape;
+          for (let r = 0; r < pShape.length; r++) {
+            for (let c = 0; c < pShape[0].length; c++) {
+              if (pShape[r][c] === 1) {
+                newBoard[dragState.boardRow! + r][dragState.boardCol! + c] = { id: dragState.piece!.id, hasDot: dragState.piece!.dots[r][c] === 1, color: dragState.piece!.color, locked: false };
+              }
+            }
+          }
+          setBoard(newBoard);
+        }
         resetDrag();
         return;
       }
 
-      // Xử lý thả vào bảng
+      // Xử lý kéo thả vào bảng
       const dropEl = document.elementFromPoint(e.clientX, e.clientY)?.closest('[data-cell]') as HTMLElement;
       let isDroppedSuccess = false;
 
@@ -258,7 +260,6 @@ export default function DiceDeduction() {
         const dropCol = parseInt(dropEl.getAttribute('data-col') || '-1', 10);
 
         if (dropRow >= 0 && dropCol >= 0) {
-          // Tính toán tọa độ góc trên cùng của khối dựa trên vị trí ngón tay chạm vào
           const targetRow = dropRow - dragState.clickR;
           const targetCol = dropCol - dragState.clickC;
           const pShape = dragState.piece!.shape;
@@ -289,24 +290,18 @@ export default function DiceDeduction() {
         }
       }
 
-      // Nếu không thả thành công, trả về vị trí cũ (hoặc khay)
+      // Thả không thành công (Ra ngoài bảng hoặc bị cấn) -> Trả về khay
       if (!isDroppedSuccess) {
-        if (dragState.source === 'board') {
-            // Có thể làm logic phục hồi bảng cũ ở đây, nhưng để đơn giản ta cất nó về khay
-            setAvailablePieces(prev => [...prev, dragState.piece!]);
-        } else {
-            setAvailablePieces(prev => [...prev, dragState.piece!]);
-        }
+        setAvailablePieces(prev => [...prev, dragState.piece!]);
       }
 
       resetDrag();
     };
 
     const resetDrag = () => {
-      setDragState({ isDragging: false, piece: null, source: null, startX: 0, startY: 0, currentX: 0, currentY: 0, clickR: 0, clickC: 0, startTime: 0, cellWidth: 48 });
+      setDragState({ isDragging: false, piece: null, source: null, startX: 0, startY: 0, currentX: 0, currentY: 0, clickR: 0, clickC: 0, boardRow: undefined, boardCol: undefined, startTime: 0, cellWidth: 48 });
     };
 
-    // Chặn cuộn trang khi đang kéo thả
     const preventTouchScroll = (e: TouchEvent) => e.preventDefault();
 
     window.addEventListener('pointermove', handlePointerMove, { passive: false });
@@ -320,7 +315,6 @@ export default function DiceDeduction() {
     };
   }, [dragState, board]);
 
-  // Trích xuất mảnh ghép từ bảng (để bốc lên)
   const extractPieceFromBoard = (pieceId: string): { piece: Piece, r: number, c: number } | null => {
     let minR = 6, maxR = -1, minC = 6, maxC = -1;
     let color = '';
@@ -351,9 +345,8 @@ export default function DiceDeduction() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-800 p-2 sm:p-4 md:p-8 font-sans text-slate-800 flex justify-center relative select-none">
+    <div className="min-h-screen bg-slate-800 p-2 sm:p-4 md:p-8 font-sans text-slate-800 flex justify-center relative select-none touch-none">
       
-      {/* HIỆU ỨNG CHIẾN THẮNG */}
       {isWon && (
         <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center backdrop-blur-sm">
           <div className="bg-white p-8 rounded-3xl shadow-2xl text-center transform scale-105 animate-bounce">
@@ -366,12 +359,11 @@ export default function DiceDeduction() {
         </div>
       )}
 
-      {/* DRAG OVERLAY: MẢNH GHÉP ĐANG BAY (Luôn có kích thước = kích thước thật trên bảng) */}
+      {/* DRAG OVERLAY: Mảnh ghép đang bay theo ngón tay */}
       {dragState.isDragging && dragState.piece && (
         <div 
           className="fixed z-[9999] pointer-events-none drop-shadow-2xl opacity-90 transition-transform scale-105"
           style={{
-            // Tính toán vị trí chính xác để con trỏ ngón tay nằm ngay trên ô vừa chạm
             left: dragState.currentX - dragState.clickC * (dragState.cellWidth + 4) - dragState.cellWidth / 2,
             top: dragState.currentY - dragState.clickR * (dragState.cellWidth + 4) - dragState.cellWidth / 2,
           }}
@@ -382,7 +374,7 @@ export default function DiceDeduction() {
                 {row.map((cell, cIdx) => (
                   <div key={cIdx} 
                        className={`flex items-center justify-center rounded-md ${cell ? dragState.piece!.color : 'bg-transparent'}`}
-                       style={{ width: dragState.cellWidth, height: dragState.cellWidth }} // Kích thước bằng đúng 1 ô trên bảng
+                       style={{ width: dragState.cellWidth, height: dragState.cellWidth }} 
                   >
                     {cell === 1 && dragState.piece!.dots[rIdx][cIdx] === 1 && <div className="w-4 h-4 md:w-5 md:h-5 bg-slate-900 rounded-full"></div>}
                   </div>
@@ -395,7 +387,7 @@ export default function DiceDeduction() {
 
       <div className="flex flex-col lg:flex-row gap-4 md:gap-8 w-full max-w-6xl items-center lg:items-start">
         
-        {/* PHẦN TRÊN: BẢNG CHƠI */}
+        {/* BẢNG CHƠI */}
         <div className="flex-none w-full max-w-sm sm:max-w-md lg:max-w-lg">
           <div className="flex justify-between items-center mb-3 md:mb-6">
             <h1 className="text-2xl md:text-3xl font-bold text-white">Dice Deduction</h1>
@@ -405,7 +397,7 @@ export default function DiceDeduction() {
             </div>
           </div>
           
-          <div className="relative bg-[#2D3748] p-3 md:p-4 rounded-2xl shadow-2xl border-4 border-slate-900 mx-auto w-fit touch-none">
+          <div className="relative bg-[#2D3748] p-3 md:p-4 rounded-2xl shadow-2xl border-4 border-slate-900 mx-auto w-fit">
             <div className="grid grid-cols-6 grid-rows-6 gap-1 bg-slate-500 border-4 border-slate-900 rounded-lg overflow-hidden relative">
               <div className="absolute top-0 bottom-0 left-1/2 w-1.5 md:w-2 -ml-[3px] md:-ml-1 bg-slate-900 pointer-events-none z-10 rounded-full"></div>
               <div className="absolute left-0 right-0 top-1/2 h-1.5 md:h-2 -mt-[3px] md:-mt-1 bg-slate-900 pointer-events-none z-10 rounded-full"></div>
@@ -415,14 +407,15 @@ export default function DiceDeduction() {
                   return (
                     <div 
                       key={`${rowIndex}-${colIndex}`}
-                      ref={rowIndex === 0 && colIndex === 0 ? boardCellRef : null} // Lấy kích thước thật của ô đầu tiên
+                      ref={rowIndex === 0 && colIndex === 0 ? boardCellRef : null} 
                       data-cell="true"
                       data-row={rowIndex}
                       data-col={colIndex}
                       onPointerDown={(e) => {
                         if (cell && !cell.locked) {
                           const extracted = extractPieceFromBoard(cell.id);
-                          if (extracted) handlePointerDown(e, extracted.piece, 'board', rowIndex - extracted.r, colIndex - extracted.c);
+                          // Bắt thêm tọa độ gốc trên bảng (extracted.r, extracted.c)
+                          if (extracted) handlePointerDown(e, extracted.piece, 'board', rowIndex - extracted.r, colIndex - extracted.c, extracted.r, extracted.c);
                         }
                       }}
                       className={`w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 flex items-center justify-center transition-colors
@@ -436,7 +429,7 @@ export default function DiceDeduction() {
               )}
             </div>
             
-            {/* Gợi ý mũi tên */}
+            {/* MŨI TÊN GỢI Ý ĐÃ ĐƯỢC CHỈNH XUỐNG THẤP */}
             {CHALLENGES.find(c => c.level === currentLevel)?.hints.map((hint, idx) => {
               if (hint.type === 'row') {
                 return (
@@ -446,7 +439,7 @@ export default function DiceDeduction() {
                 );
               } else {
                 return (
-                  <div key={idx} className="absolute -bottom-8 md:-bottom-12 bg-white border-2 md:border-4 border-slate-800 font-bold px-1.5 py-1 md:px-2 md:py-2 rounded-t-full shadow-md flex flex-col items-center z-20 text-sm md:text-lg" style={{ left: hint.index === 0 ? '20%' : '70%' }}>
+                  <div key={idx} className="absolute -bottom-12 md:-bottom-16 bg-white border-2 md:border-4 border-slate-800 font-bold px-1.5 py-1 md:px-2 md:py-2 rounded-t-full shadow-md flex flex-col items-center z-20 text-sm md:text-lg" style={{ left: hint.index === 0 ? '20%' : '70%' }}>
                     <span>▲</span> {hint.value}
                   </div>
                 );
@@ -455,11 +448,11 @@ export default function DiceDeduction() {
           </div>
         </div>
 
-        {/* PHẦN DƯỚI: KHAY MẢNH GHÉP (Hiển thị siêu gọn) */}
-        <div className="w-full lg:flex-1 bg-slate-700 p-4 rounded-2xl shadow-inner mt-4 md:mt-0 touch-none">
+        {/* KHAY MẢNH GHÉP */}
+        <div className="w-full lg:flex-1 bg-slate-700 p-4 rounded-2xl shadow-inner mt-4 md:mt-0">
           <div className="flex justify-between items-center mb-3">
             <h2 className="text-lg md:text-xl font-bold text-white">Khay mảnh ghép</h2>
-            <select className="px-2 py-1 text-sm rounded bg-slate-800 text-white border border-slate-500 font-medium" value={currentLevel} onChange={(e) => setCurrentLevel(Number(e.target.value))}>
+            <select className="px-2 py-1 text-sm rounded bg-slate-800 text-white border border-slate-500 font-medium cursor-pointer" value={currentLevel} onChange={(e) => setCurrentLevel(Number(e.target.value))}>
               {CHALLENGES.map(c => <option key={c.level} value={c.level}>Lv {c.level} - {c.difficulty}</option>)}
             </select>
           </div>
