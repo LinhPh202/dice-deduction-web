@@ -74,7 +74,7 @@ const CHALLENGES: Challenge[] = [
     setupPieces: [
       { id: 'p7', row: 0, col: 0, rotatedShape: [[1],[1],[1]], rotatedDots: [[1],[0],[1]] },
       { id: 'p11', row: 0, col: 1, rotatedShape: [[1,1],[1,1]], rotatedDots: [[0,1],[1,0]] },
-      { id: 'p1', row: 2, col: 1, rotatedShape: [[1,1]], rotatedDots: [[0],[0]] },
+      { id: 'p1', row: 2, col: 1, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
       { id: 'p2', row: 2, col: 3, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
       { id: 'p6', row: 2, col: 5, rotatedShape: [[1],[1]], rotatedDots: [[0],[1]] },
       { id: 'p10', row: 4, col: 4, rotatedShape: [[1,1],[1,1]], rotatedDots: [[1,0],[0,0]] },
@@ -90,11 +90,11 @@ const CHALLENGES: Challenge[] = [
     setupPieces: [
       { id: 'p1', row: 0, col: 0, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
       { id: 'p6', row: 0, col: 2, rotatedShape: [[1,1]], rotatedDots: [[0,1]] },
-      { id: 'p7', row: 1, col: 0, rotatedShape: [[1],[1],[1]], rotatedDots: [[1],[0],[1]] },
-      { id: 'p5', row: 2, col: 2, rotatedShape: [[1,1]], rotatedDots: [[1,1]] },
+      { id: 'p7', row: 3, col: 0, rotatedShape: [[1],[1],[1]], rotatedDots: [[1],[0],[1]] },
+      { id: 'p5', row: 3, col: 2, rotatedShape: [[1,1]], rotatedDots: [[1,1]] },
       { id: 'p2', row: 2, col: 4, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
       { id: 'p3', row: 4, col: 4, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
-      { id: 'p4', row: 5, col: 0, rotatedShape: [[1,1]], rotatedDots: [[0,0]] }
+      { id: 'p4', row: 1, col: 0, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] }
     ]
   },
   {
@@ -122,7 +122,7 @@ const CHALLENGES: Challenge[] = [
     setupPieces: [
       { id: 'p11', row: 0, col: 4, rotatedShape: [[1,1],[1,1]], rotatedDots: [[0,1],[1,0]] },
       { id: 'p8', row: 1, col: 1, rotatedShape: [[1],[1],[1]], rotatedDots: [[1],[0],[0]] },
-      { id: 'p9', row: 1, col: 3, rotatedShape: [[1],[1],[1],[1]], rotatedDots: [[1],[0],[0],[1]] },
+      { id: 'p9', row: 2, col: 3, rotatedShape: [[1],[1],[1],[1]], rotatedDots: [[1],[0],[0],[1]] },
       { id: 'p5', row: 2, col: 0, rotatedShape: [[1],[1]], rotatedDots: [[1],[1]] },
       { id: 'p10', row: 4, col: 0, rotatedShape: [[1,1],[1,1]], rotatedDots: [[0,0],[1,0]] }
     ]
@@ -336,6 +336,417 @@ const CHALLENGES: Challenge[] = [
       { id: 'p9', row: 0, col: 2, rotatedShape: [[1,1,1,1]], rotatedDots: [[1,0,0,1]] },
       { id: 'p10', row: 1, col: 3, rotatedShape: [[1,1],[1,1]], rotatedDots: [[0,0],[1,0]] },
       { id: 'p1', row: 4, col: 2, rotatedShape: [[1,1]], rotatedDots: [[0,0]] }
+    ]
+  },
+  {
+    level: 23, difficulty: 'Junior',
+    hints: [
+      { type: 'row', index: 0, value: 5 }, { type: 'row', index: 1, value: 7 }
+    ],
+    setupPieces: [
+      { id: 'p10', row: 0, col: 0, rotatedShape: [[1,1],[1,1]], rotatedDots: [[1,0],[0,0]] },
+      { id: 'p11', row: 0, col: 3, rotatedShape: [[1,1],[1,1]], rotatedDots: [[1,0],[0,1]] },
+      { id: 'p1', row: 3, col: 4, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
+      { id: 'p8', row: 5, col: 3, rotatedShape: [[1,1,1]], rotatedDots: [[0,0,1]] }
+    ]
+  },
+  {
+    level: 24, difficulty: 'Junior',
+    hints: [
+      { type: 'row', index: 0, value: 4 }, { type: 'row', index: 1, value: 8 }, 
+      { type: 'col', index: 0, value: 5 }, { type: 'col', index: 1, value: 7 }
+    ],
+    setupPieces: [
+      { id: 'p10', row: 0, col: 2, rotatedShape: [[1,1],[1,1]], rotatedDots: [[1,0],[0,0]] },
+      { id: 'p8', row: 3, col: 0, rotatedShape: [[1,1,1]], rotatedDots: [[0,0,1]] },
+      { id: 'p7', row: 3, col: 3, rotatedShape: [[1,1,1]], rotatedDots: [[1,0,1]] }
+    ]
+  },
+  {
+    level: 25, difficulty: 'Expert',
+    hints: [
+      { type: 'row', index: 0, value: 7 }, 
+      { type: 'col', index: 0, value: 8 }
+    ],
+    setupPieces: [
+      { id: 'p12', row: 0, col: 3, rotatedShape: [[1,1,1],[1,1,1]], rotatedDots: [[0,0,0],[0,1,0]] },
+      { id: 'p1', row: 2, col: 5, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
+      { id: 'p6', row: 3, col: 2, rotatedShape: [[1],[1]], rotatedDots: [[1],[0]] }
+    ]
+  },
+  {
+    level: 26, difficulty: 'Expert',
+    hints: [
+      { type: 'row', index: 1, value: 9 }, 
+      { type: 'col', index: 0, value: 6 }
+    ],
+    setupPieces: [
+      { id: 'p8', row: 0, col: 0, rotatedShape: [[1],[1],[1]], rotatedDots: [[0],[0],[1]] },
+      { id: 'p9', row: 0, col: 2, rotatedShape: [[1],[1],[1],[1]], rotatedDots: [[1],[0],[0],[1]] },
+      { id: 'p6', row: 3, col: 5, rotatedShape: [[1],[1]], rotatedDots: [[0],[1]] }
+    ]
+  },
+  {
+    level: 27, difficulty: 'Expert',
+    hints: [
+      { type: 'row', index: 0, value: 8 }, 
+      { type: 'col', index: 1, value: 3 }
+    ],
+    setupPieces: [
+      { id: 'p1', row: 0, col: 1, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
+      { id: 'p2', row: 1, col: 4, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
+      { id: 'p4', row: 2, col: 5, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
+      { id: 'p3', row: 3, col: 1, rotatedShape: [[1,1]], rotatedDots: [[0,0]] }
+    ]
+  },
+  {
+    level: 28, difficulty: 'Expert',
+    hints: [
+      { type: 'row', index: 1, value: 7 }
+    ],
+    setupPieces: [
+      { id: 'p1', row: 0, col: 0, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
+      { id: 'p11', row: 0, col: 4, rotatedShape: [[1,1],[1,1]], rotatedDots: [[0,1],[1,0]] },
+      { id: 'p7', row: 3, col: 0, rotatedShape: [[1,1,1]], rotatedDots: [[1,0,1]] },
+      { id: 'p6', row: 3, col: 4, rotatedShape: [[1],[1]], rotatedDots: [[0],[1]] }
+    ]
+  },
+  {
+    level: 29, difficulty: 'Expert',
+    hints: [
+      { type: 'col', index: 1, value: 9 }
+    ],
+    setupPieces: [
+      { id: 'p10', row: 1, col: 2, rotatedShape: [[1,1],[1,1]], rotatedDots: [[0,0],[0,1]] },
+      { id: 'p5', row: 5, col: 3, rotatedShape: [[1,1]], rotatedDots: [[1,1]] }
+    ]
+  },
+  {
+    level: 30, difficulty: 'Expert',
+    hints: [
+      { type: 'row', index: 0, value: 6 }
+    ],
+    setupPieces: [
+      { id: 'p7', row: 0, col: 2, rotatedShape: [[1],[1],[1]], rotatedDots: [[1],[0],[1]] },
+      { id: 'p8', row: 0, col: 3, rotatedShape: [[1,1,1]], rotatedDots: [[1,0,0]] },
+      { id: 'p1', row: 1, col: 0, rotatedShape: [[1,1]], rotatedDots: [[0,0]] }
+    ]
+  },
+  {
+    level: 31, difficulty: 'Expert',
+    hints: [
+      { type: 'row', index: 0, value: 4 }, { type: 'row', index: 1, value: 8 }, 
+      { type: 'col', index: 0, value: 9 }, { type: 'col', index: 1, value: 3 }
+    ],
+    setupPieces: [
+      { id: 'p1', row: 0, col: 0, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
+      { id: 'p2', row: 2, col: 5, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
+      { id: 'p3', row: 4, col: 1, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] }
+    ]
+  },
+  {
+    level: 32, difficulty: 'Expert',
+    hints: [
+      { type: 'row', index: 0, value: 6 }, 
+      { type: 'col', index: 1, value: 7 }
+    ],
+    setupPieces: [
+      { id: 'p1', row: 0, col: 3, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
+      { id: 'p2', row: 3, col: 2, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
+      { id: 'p10', row: 4, col: 4, rotatedShape: [[1,1],[1,1]], rotatedDots: [[0,0],[0,1]] },
+      { id: 'p8', row: 5, col: 0, rotatedShape: [[1,1,1]], rotatedDots: [[0,0,1]] }
+    ]
+  },
+  {
+    level: 33, difficulty: 'Expert',
+    hints: [
+      { type: 'row', index: 0, value: 7 }, { type: 'row', index: 1, value: 5 }, 
+      { type: 'col', index: 0, value: 5 }, { type: 'col', index: 1, value: 7 }
+    ],
+    setupPieces: [
+      { id: 'p1', row: 0, col: 0, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
+      { id: 'p8', row: 3, col: 3, rotatedShape: [[1,1,1]], rotatedDots: [[1,0,0]] },
+      { id: 'p2', row: 4, col: 3, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
+      { id: 'p11', row: 4, col: 4, rotatedShape: [[1,1],[1,1]], rotatedDots: [[1,0],[0,1]] }
+    ]
+  },
+  {
+    level: 34, difficulty: 'Expert',
+    hints: [
+      { type: 'row', index: 0, value: 5 }, 
+      { type: 'col', index: 0, value: 5 }
+    ],
+    setupPieces: [
+      { id: 'p1', row: 1, col: 0, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
+      { id: 'p2', row: 1, col: 2, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
+      { id: 'p9', row: 2, col: 0, rotatedShape: [[1,1,1,1]], rotatedDots: [[1,0,0,1]] }
+    ]
+  },
+  {
+    level: 35, difficulty: 'Expert',
+    hints: [
+      { type: 'col', index: 1, value: 7 }
+    ],
+    setupPieces: [
+      { id: 'p8', row: 2, col: 0, rotatedShape: [[1,1,1]], rotatedDots: [[1,0,0]] },
+      { id: 'p6', row: 1, col: 3, rotatedShape: [[1],[1]], rotatedDots: [[0],[1]] },
+      { id: 'p5', row: 2, col: 5, rotatedShape: [[1],[1]], rotatedDots: [[1],[1]] }
+    ]
+  },
+  {
+    level: 36, difficulty: 'Expert',
+    hints: [
+      { type: 'row', index: 0, value: 8 }, { type: 'row', index: 1, value: 4 }, 
+      { type: 'col', index: 0, value: 9 }, { type: 'col', index: 1, value: 3 }
+    ],
+    setupPieces: [
+      { id: 'p1', row: 1, col: 1, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
+      { id: 'p2', row: 3, col: 4, rotatedShape: [[1,1]], rotatedDots: [[0,0]] }
+    ]
+  },
+  {
+    level: 37, difficulty: 'Master',
+    hints: [
+      { type: 'col', index: 1, value: 4 }
+    ],
+    setupPieces: [
+      { id: 'p1', row: 2, col: 4, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
+      { id: 'p6', row: 4, col: 1, rotatedShape: [[1],[1]], rotatedDots: [[1],[0]] },
+      { id: 'p2', row: 4, col: 2, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
+      { id: 'p7', row: 5, col: 2, rotatedShape: [[1,1,1]], rotatedDots: [[1,0,1]] }
+    ]
+  },
+  {
+    level: 38, difficulty: 'Master',
+    hints: [
+      { type: 'row', index: 0, value: 5 }, 
+      { type: 'col', index: 0, value: 7 }
+    ],
+    setupPieces: [
+      { id: 'p6', row: 0, col: 0, rotatedShape: [[1],[1]], rotatedDots: [[1],[0]] },
+      { id: 'p1', row: 0, col: 3, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
+      { id: 'p8', row: 5, col: 0, rotatedShape: [[1,1,1]], rotatedDots: [[0,0,1]] }
+    ]
+  },
+  {
+    level: 39, difficulty: 'Master',
+    hints: [
+      { type: 'row', index: 0, value: 5 }
+    ],
+    setupPieces: [
+      { id: 'p6', row: 1, col: 0, rotatedShape: [[1],[1]], rotatedDots: [[0],[1]] },
+      { id: 'p1', row: 4, col: 1, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
+      { id: 'p2', row: 3, col: 5, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] }
+    ]
+  },
+  {
+    level: 40, difficulty: 'Master',
+    hints: [],
+    setupPieces: [
+      { id: 'p12', row: 3, col: 0, rotatedShape: [[1,1],[1,1],[1,1]], rotatedDots: [[0,0],[0,1],[0,0]] },
+      { id: 'p6', row: 3, col: 2, rotatedShape: [[1,1]], rotatedDots: [[0,1]] },
+      { id: 'p11', row: 4, col: 4, rotatedShape: [[1,1],[1,1]], rotatedDots: [[1,0],[0,1]] }
+    ]
+  },
+  {
+    level: 41, difficulty: 'Master',
+    hints: [],
+    setupPieces: [
+      { id: 'p12', row: 3, col: 0, rotatedShape: [[1,1],[1,1],[1,1]], rotatedDots: [[0,0],[0,1],[0,0]] },
+      { id: 'p6', row: 4, col: 2, rotatedShape: [[1],[1]], rotatedDots: [[0],[1]] },
+      { id: 'p8', row: 1, col: 4, rotatedShape: [[1],[1],[1]], rotatedDots: [[1],[0],[0]] }
+    ]
+  },
+  {
+    level: 42, difficulty: 'Master',
+    hints: [
+      { type: 'row', index: 1, value: 5 }
+    ],
+    setupPieces: [
+      { id: 'p8', row: 0, col: 0, rotatedShape: [[1],[1],[1]], rotatedDots: [[1],[0],[0]] },
+      { id: 'p6', row: 3, col: 0, rotatedShape: [[1,1]], rotatedDots: [[1,0]] },
+      { id: 'p9', row: 5, col: 2, rotatedShape: [[1,1,1,1]], rotatedDots: [[1,0,0,1]] },
+      { id: 'p11', row: 1, col: 4, rotatedShape: [[1,1],[1,1]], rotatedDots: [[1,0],[0,1]] }
+    ]
+  },
+  {
+    level: 43, difficulty: 'Master',
+    hints: [
+      { type: 'col', index: 0, value: 6 }
+    ],
+    setupPieces: [
+      { id: 'p8', row: 0, col: 0, rotatedShape: [[1,1,1]], rotatedDots: [[1,0,0]] },
+      { id: 'p9', row: 0, col: 3, rotatedShape: [[1],[1],[1],[1]], rotatedDots: [[1],[0],[0],[1]] },
+      { id: 'p1', row: 3, col: 4, rotatedShape: [[1,1]], rotatedDots: [[0,0]] }
+    ]
+  },
+  {
+    level: 44, difficulty: 'Master',
+    hints: [
+      { type: 'row', index: 1, value: 5 }
+    ],
+    setupPieces: [
+      { id: 'p8', row: 0, col: 0, rotatedShape: [[1],[1],[1]], rotatedDots: [[1],[0],[0]] },
+      { id: 'p6', row: 1, col: 2, rotatedShape: [[1],[1]], rotatedDots: [[0],[1]] }
+    ]
+  },
+  {
+    level: 45, difficulty: 'Master',
+    hints: [
+      { type: 'row', index: 0, value: 6 }
+    ],
+    setupPieces: [
+      { id: 'p10', row: 0, col: 3, rotatedShape: [[1,1],[1,1]], rotatedDots: [[0,0],[0,1]] },
+      { id: 'p9', row: 2, col: 0, rotatedShape: [[1],[1],[1],[1]], rotatedDots: [[1],[0],[0],[1]] },
+      { id: 'p1', row: 4, col: 2, rotatedShape: [[1,1]], rotatedDots: [[0,0]] }
+    ]
+  },
+  {
+    level: 46, difficulty: 'Master',
+    hints: [],
+    setupPieces: [
+      { id: 'p1', row: 0, col: 0, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
+      { id: 'p8', row: 0, col: 3, rotatedShape: [[1],[1],[1]], rotatedDots: [[1],[0],[0]] },
+      { id: 'p12', row: 2, col: 1, rotatedShape: [[1,1],[1,1],[1,1]], rotatedDots: [[0,0],[0,1],[0,0]] }
+    ]
+  },
+  {
+    level: 47, difficulty: 'Master',
+    hints: [
+      { type: 'row', index: 1, value: 4 }
+    ],
+    setupPieces: [
+      { id: 'p1', row: 0, col: 0, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
+      { id: 'p8', row: 2, col: 0, rotatedShape: [[1,1,1]], rotatedDots: [[1,0,0]] },
+      { id: 'p2', row: 4, col: 5, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] }
+    ]
+  },
+  {
+    level: 48, difficulty: 'Master',
+    hints: [],
+    setupPieces: [
+      { id: 'p8', row: 1, col: 1, rotatedShape: [[1,1,1]], rotatedDots: [[1,0,0]] },
+      { id: 'p12', row: 2, col: 1, rotatedShape: [[1,1],[1,1],[1,1]], rotatedDots: [[0,0],[0,1],[0,0]] },
+      { id: 'p11', row: 4, col: 3, rotatedShape: [[1,1],[1,1]], rotatedDots: [[0,1],[1,0]] }
+    ]
+  },
+  {
+    level: 49, difficulty: 'Wizard',
+    hints: [
+      { type: 'col', index: 1, value: 4 }
+    ],
+    setupPieces: [
+      { id: 'p10', row: 4, col: 3, rotatedShape: [[1,1],[1,1]], rotatedDots: [[0,0],[1,0]] },
+      { id: 'p1', row: 5, col: 0, rotatedShape: [[1,1]], rotatedDots: [[0,0]] }
+    ]
+  },
+  {
+    level: 50, difficulty: 'Wizard',
+    hints: [
+      { type: 'row', index: 0, value: 7 }
+    ],
+    setupPieces: [
+      { id: 'p9', row: 0, col: 2, rotatedShape: [[1,1,1,1]], rotatedDots: [[1,0,0,1]] },
+      { id: 'p1', row: 1, col: 0, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
+      { id: 'p2', row: 3, col: 0, rotatedShape: [[1,1]], rotatedDots: [[0,0]] }
+    ]
+  },
+  {
+    level: 51, difficulty: 'Wizard',
+    hints: [
+      { type: 'row', index: 0, value: 3 }, 
+      { type: 'col', index: 0, value: 8 }
+    ],
+    setupPieces: [
+      { id: 'p1', row: 0, col: 1, rotatedShape: [[1,1]], rotatedDots: [[0,0]] }
+    ]
+  },
+  {
+    level: 52, difficulty: 'Wizard',
+    hints: [],
+    setupPieces: [
+      { id: 'p8', row: 2, col: 5, rotatedShape: [[1],[1],[1]], rotatedDots: [[0],[0],[1]] },
+      { id: 'p12', row: 4, col: 0, rotatedShape: [[1,1,1],[1,1,1]], rotatedDots: [[0,1,0],[0,0,0]] }
+    ]
+  },
+  {
+    level: 53, difficulty: 'Wizard',
+    hints: [],
+    setupPieces: [
+      { id: 'p1', row: 1, col: 0, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
+      { id: 'p8', row: 2, col: 0, rotatedShape: [[1,1,1]], rotatedDots: [[1,0,0]] },
+      { id: 'p12', row: 3, col: 2, rotatedShape: [[1,1,1],[1,1,1]], rotatedDots: [[0,1,0],[0,0,0]] }
+    ]
+  },
+  {
+    level: 54, difficulty: 'Wizard',
+    hints: [
+      { type: 'row', index: 0, value: 3 }, 
+      { type: 'col', index: 1, value: 5 }
+    ],
+    setupPieces: [
+      { id: 'p1', row: 0, col: 0, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] }
+    ]
+  },
+  {
+    level: 55, difficulty: 'Wizard',
+    hints: [
+      { type: 'col', index: 0, value: 7 }
+    ],
+    setupPieces: [
+      { id: 'p6', row: 0, col: 0, rotatedShape: [[1],[1]], rotatedDots: [[1],[0]] },
+      { id: 'p1', row: 1, col: 2, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
+      { id: 'p2', row: 1, col: 4, rotatedShape: [[1,1]], rotatedDots: [[0,0]] }
+    ]
+  },
+  {
+    level: 56, difficulty: 'Wizard',
+    hints: [
+      { type: 'row', index: 1, value: 7 }, 
+      { type: 'col', index: 0, value: 6 }
+    ],
+    setupPieces: [
+      { id: 'p8', row: 1, col: 1, rotatedShape: [[1],[1],[1]], rotatedDots: [[1],[0],[0]] }
+    ]
+  },
+  {
+    level: 57, difficulty: 'Wizard',
+    hints: [
+      { type: 'row', index: 0, value: 8 }, 
+      { type: 'col', index: 1, value: 8 }
+    ],
+    setupPieces: [
+      { id: 'p1', row: 1, col: 3, rotatedShape: [[1,1]], rotatedDots: [[0,0]] }
+    ]
+  },
+  {
+    level: 58, difficulty: 'Wizard',
+    hints: [
+      { type: 'col', index: 1, value: 6 }
+    ],
+    setupPieces: [
+      { id: 'p6', row: 1, col: 0, rotatedShape: [[1],[1]], rotatedDots: [[0],[1]] },
+      { id: 'p8', row: 4, col: 0, rotatedShape: [[1,1,1]], rotatedDots: [[1,0,0]] }
+    ]
+  },
+  {
+    level: 59, difficulty: 'Wizard',
+    hints: [
+      { type: 'col', index: 1, value: 9 }
+    ],
+    setupPieces: [
+      { id: 'p1', row: 1, col: 0, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
+      { id: 'p2', row: 3, col: 0, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] }
+    ]
+  },
+  {
+    level: 60, difficulty: 'Wizard',
+    hints: [
+      { type: 'col', index: 1, value: 4 }
+    ],
+    setupPieces: [
+      { id: 'p1', row: 1, col: 2, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
+      { id: 'p2', row: 3, col: 1, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] }
     ]
   }
 ];
@@ -640,7 +1051,7 @@ export default function DiceDeduction() {
       
       {isWon && (
         <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center backdrop-blur-sm">
-          <div className="bg-white p-8 rounded-3xl shadow-2xl text-center transform scale-105 animate-bounce">
+          <div className="bg-white p-8 rounded-2xl shadow-xl text-center">
             <h2 className="text-4xl md:text-5xl font-extrabold text-green-500 mb-4">CHÍNH XÁC! 🎉</h2>
             <button onClick={() => {
               const nextLevel = CHALLENGES.find(c => c.level === currentLevelNum + 1);
