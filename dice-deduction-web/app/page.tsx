@@ -57,7 +57,7 @@ const CHALLENGES: Challenge[] = [
     setupPieces: [
       { id: 'p1', row: 0, col: 0, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
       { id: 'p5', row: 0, col: 2, rotatedShape: [[1,1]], rotatedDots: [[1,1]] },
-      { id: 'p3', row: 2, col: 1, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
+      { id: 'p3', row: 2, col: 1, rotatedShape: [[1,1]], rotatedDots: [[0,0]] },
       { id: 'p6', row: 1, col: 0, rotatedShape: [[1],[1]], rotatedDots: [[0],[1]] },
       { id: 'p7', row: 2, col: 3, rotatedShape: [[1,1,1]], rotatedDots: [[1,0,1]] },
       { id: 'p2', row: 3, col: 5, rotatedShape: [[1],[1]], rotatedDots: [[0],[0]] },
