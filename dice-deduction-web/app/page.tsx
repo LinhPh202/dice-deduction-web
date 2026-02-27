@@ -665,7 +665,7 @@ const CHALLENGES: Challenge[] = [
     level: 52, difficulty: 'Wizard',
     hints: [],
     setupPieces: [
-      { id: 'p8', row: 2, col: 5, rotatedShape: [[1],[1],[1]], rotatedDots: [[0],[0],[1]] },
+      { id: 'p8', row: 1, col: 5, rotatedShape: [[1],[1],[1]], rotatedDots: [[0],[0],[1]] },
       { id: 'p12', row: 4, col: 0, rotatedShape: [[1,1,1],[1,1,1]], rotatedDots: [[0,1,0],[0,0,0]] }
     ]
   },
@@ -726,7 +726,7 @@ const CHALLENGES: Challenge[] = [
     ],
     setupPieces: [
       { id: 'p6', row: 1, col: 0, rotatedShape: [[1],[1]], rotatedDots: [[0],[1]] },
-      { id: 'p8', row: 4, col: 0, rotatedShape: [[1,1,1]], rotatedDots: [[1,0,0]] }
+      { id: 'p8', row: 5, col: 0, rotatedShape: [[1,1,1]], rotatedDots: [[1,0,0]] }
     ]
   },
   {
