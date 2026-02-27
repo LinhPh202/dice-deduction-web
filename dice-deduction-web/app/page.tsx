@@ -72,7 +72,7 @@ export default function DiceDeduction() {
 
   const boardCellRef = useRef<HTMLDivElement>(null);
 
-  // --- THÊM boardRow & boardCol ĐỂ LƯU VỊ TRÍ GỐC TRÊN BẢNG ---
+  // --- THÊM trayIndex ĐỂ NHỚ VỊ TRÍ CỦA MẢNH TRONG KHAY ---
   const [dragState, setDragState] = useState<{
     isDragging: boolean;
     piece: Piece | null;
@@ -85,6 +85,7 @@ export default function DiceDeduction() {
     clickC: number; 
     boardRow?: number;
     boardCol?: number;
+    trayIndex?: number;
     startTime: number;
     cellWidth: number;
   }>({ isDragging: false, piece: null, source: null, startX: 0, startY: 0, currentX: 0, currentY: 0, clickR: 0, clickC: 0, startTime: 0, cellWidth: 48 });
@@ -190,6 +191,7 @@ export default function DiceDeduction() {
       targetCellWidth = boardCellRef.current.getBoundingClientRect().width;
     }
 
+    let tIndex = -1;
     if (source === 'board') {
       saveHistory();
       const newBoard = board.map(row => [...row]);
@@ -200,6 +202,7 @@ export default function DiceDeduction() {
       }
       setBoard(newBoard);
     } else {
+      tIndex = availablePieces.findIndex(p => p.id === piece.id);
       setAvailablePieces(prev => prev.filter(p => p.id !== piece.id));
     }
 
@@ -207,7 +210,7 @@ export default function DiceDeduction() {
       isDragging: true, piece, source,
       startX: e.clientX, startY: e.clientY,
       currentX: e.clientX, currentY: e.clientY,
-      clickR, clickC, boardRow, boardCol,
+      clickR, clickC, boardRow, boardCol, trayIndex: tIndex,
       startTime: Date.now(),
       cellWidth: targetCellWidth
     });
@@ -229,11 +232,21 @@ export default function DiceDeduction() {
       // Phân biệt Click nhanh (để xoay hoặc trả về chỗ cũ) vs Drag kéo thả (ngưỡng 15px)
       if (dt < 250 && Math.abs(dx) < 15 && Math.abs(dy) < 15) {
         if (dragState.source === 'tray') {
-          // Xoay mảnh 90 độ
+          // Xoay mảnh 90 độ và chèn lại vị trí cũ
           const p = dragState.piece!;
           const newShape = p.shape[0].map((_, index) => p.shape.map(row => row[index]).reverse());
           const newDots = p.dots[0].map((_, index) => p.dots.map(row => row[index]).reverse());
-          setAvailablePieces(prev => [...prev, { ...p, shape: newShape, dots: newDots }]);
+          const rotatedPiece = { ...p, shape: newShape, dots: newDots };
+          
+          setAvailablePieces(prev => {
+            const arr = [...prev];
+            if (dragState.trayIndex !== undefined && dragState.trayIndex >= 0) {
+              arr.splice(dragState.trayIndex, 0, rotatedPiece);
+            } else {
+              arr.push(rotatedPiece);
+            }
+            return arr;
+          });
         } else if (dragState.source === 'board' && dragState.boardRow !== undefined && dragState.boardCol !== undefined) {
           // Nhấn nhầm trên bảng -> Trả về đúng vị trí cũ
           const newBoard = board.map(row => [...row]);
@@ -292,14 +305,21 @@ export default function DiceDeduction() {
 
       // Thả không thành công (Ra ngoài bảng hoặc bị cấn) -> Trả về khay
       if (!isDroppedSuccess) {
-        setAvailablePieces(prev => [...prev, dragState.piece!]);
+        setAvailablePieces(prev => {
+          if (dragState.source === 'tray' && dragState.trayIndex !== undefined && dragState.trayIndex >= 0) {
+            const arr = [...prev];
+            arr.splice(dragState.trayIndex, 0, dragState.piece!);
+            return arr;
+          }
+          return [...prev, dragState.piece!];
+        });
       }
 
       resetDrag();
     };
 
     const resetDrag = () => {
-      setDragState({ isDragging: false, piece: null, source: null, startX: 0, startY: 0, currentX: 0, currentY: 0, clickR: 0, clickC: 0, boardRow: undefined, boardCol: undefined, startTime: 0, cellWidth: 48 });
+      setDragState({ isDragging: false, piece: null, source: null, startX: 0, startY: 0, currentX: 0, currentY: 0, clickR: 0, clickC: 0, boardRow: undefined, boardCol: undefined, trayIndex: undefined, startTime: 0, cellWidth: 48 });
     };
 
     const preventTouchScroll = (e: TouchEvent) => e.preventDefault();
@@ -414,7 +434,6 @@ export default function DiceDeduction() {
                       onPointerDown={(e) => {
                         if (cell && !cell.locked) {
                           const extracted = extractPieceFromBoard(cell.id);
-                          // Bắt thêm tọa độ gốc trên bảng (extracted.r, extracted.c)
                           if (extracted) handlePointerDown(e, extracted.piece, 'board', rowIndex - extracted.r, colIndex - extracted.c, extracted.r, extracted.c);
                         }
                       }}
