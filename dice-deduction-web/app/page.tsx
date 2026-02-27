@@ -112,7 +112,7 @@ const CHALLENGES: Challenge[] = [
       { id: 'p7', row: 4, col: 2, rotatedShape: [[1,1,1]], rotatedDots: [[1,0,1]] },
       { id: 'p4', row: 5, col: 3, rotatedShape: [[1,1]], rotatedDots: [[0,0]] }
     ]
-  }
+  },
   {
     level: 5, difficulty: 'Starter',
     hints: [
